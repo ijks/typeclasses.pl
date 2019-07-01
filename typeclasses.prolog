@@ -36,6 +36,9 @@ instance_decl(Goals, Head, _Dict) :-
     maplist(constraint, Goals),
     constraint(Head).
 
+%! tyvars(Term, Vars).
+%
+% True if `Vars` is the set of type variables ocurring in `Term`.
 tyvars(tyvar(V), [V]).
 tyvars(_ @ Arg, Vars) :-
     tyvars(Arg, Vars).
@@ -45,11 +48,18 @@ tyvars(List, Vars) :-
     maplist(tyvars, List, Subvars),
     foldl(union, Subvars, [], Vars).
 
+%! no_unbound_tyvars(Goals, Head).
+%
+% True if all variables in `Goals` are bound in `Head`, i.e. all occur in `Head`.
 no_unbound_tyvars(Goals, Head) :-
     tyvars(Goals, GVars),
     tyvars(Head, HVars),
     subset(GVars, HVars).
 
+%! substitute_vars(Term, Mapping, Substituted).
+%
+% Given a mapping from type variables to values, substitute each occurrence
+% of a variable with its mapped value.
 substitute_vars(tyvar(V), Mapping, Value) :-
     member(V-Value, Mapping).
 substitute_vars(Ctor $ Args, Mapping, Ctor $ MArgs) :-
@@ -62,6 +72,9 @@ substitute_vars([X | XS], Mapping, [M | MS]) :-
     substitute_vars(X, Mapping, M),
     substitute_vars(XS, Mapping, MS).
 
+%! make_nonground(Term, NonGround).
+%
+% Replace each type variable in a term with a fresh Prolog variable.
 make_nonground(Term, NonGround) :-
     tyvars(Term, Vars),
     maplist([TyVar, Mapping] >> (Mapping = TyVar - _), Vars, Mappings),
