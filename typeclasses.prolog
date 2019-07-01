@@ -64,5 +64,5 @@ substitute_vars([X | XS], Mapping, [M | MS]) :-
 
 make_nonground(Term, NonGround) :-
     tyvars(Term, Vars),
-    maplist([TyVar, Mapping] >> (Mapping = TyVar-_), Vars, Mappings),
+    maplist([TyVar, Mapping] >> (Mapping = TyVar - _), Vars, Mappings),
     substitute_vars(Term, Mappings, NonGround).
