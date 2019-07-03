@@ -15,7 +15,7 @@
 % ==>
 % 'Functor'(F) :- 'Applicative'(F).
 % ^ how do we prevent Applicative(F) instances when there's no Functor(F) instance?
-% Is that within the scope of the system? 
+% Is that within the scope of the system?
 
 % What about coherence?
 
@@ -66,7 +66,8 @@ substitute_vars(Ctor $ Args, Mapping, Ctor $ MArgs) :-
     substitute_vars(Args, Mapping, MArgs).
 substitute_vars(Ctor @ Args, Mapping, Ctor @ MArgs) :-
     substitute_vars(Args, Mapping, MArgs).
-% We could have written the list clause with maplist, but that seemed to prevent identically-named variables to unify.
+% We could have written the list clause with maplist, but that seemed to
+% prevent identically-named variables from unifying.
 substitute_vars([], _, []).
 substitute_vars([X | XS], Mapping, [M | MS]) :-
     substitute_vars(X, Mapping, M),
