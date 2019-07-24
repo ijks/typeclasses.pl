@@ -58,3 +58,18 @@ context([Constraint]) -->
 context(Constraints) -->
     sequence(token('('), constraint, token(','), token(')'), Constraints),
     ['=>'].
+
+instance(instance(Constraints, Class, Type, Impls)) -->
+    [instance],
+    optional(context(Constraints), { Constraints = [] }),
+    [ident(Class)],
+    basic_type(Type),
+    [where],
+    sequence(token('{'), method_body, token(';'), token('}'), Impls).
+
+method_body(body(Name, Body)) -->
+    % We only allow `undefined` as a method body, because it's outside of our
+    % scope to also parse Haskell's expression language.
+    % One future improvement would be to just grab everything up to the `;` as a plain string.
+    { Body = undefined },
+    [varident(Name), '=', varident(Body)].
