@@ -7,6 +7,7 @@ left_paren('(') --> "(".
 right_paren(')') --> ")".
 left_curly('{') --> "{".
 right_curly('}') --> "}".
+thin_arrow('->') --> "->".
 fat_arrow('=>') --> "=>".
 comma(',') --> ",".
 semicolon(';') --> ";".
@@ -14,7 +15,7 @@ semicolon(';') --> ";".
 punctuation(P) -->
     left_paren(P) | right_paren(P)
     | left_curly(P) | right_curly(P)
-    | fat_arrow(P)
+    | thin_arrow(P) | fat_arrow(P)
     | comma(P) | semicolon(P).
 
 upper(C) --> [C], { code_type(C, upper) }.
@@ -23,6 +24,8 @@ ident_char(C) -->
     [C],
     { code_type(C, alnum); [C] = `'` ; [C] = `_` }.
 
+% TODO: quantified identifiers
+% TODO: rename to make clear this is a _constructor_ ident
 ident(ident(Ident)) -->
     upper(C),
     sequence(ident_char, Rest),
