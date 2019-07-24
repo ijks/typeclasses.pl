@@ -55,7 +55,7 @@ free([], []).
 free([ _ : T | Ctx ], F) :-
     free(T, FT), free(Ctx, FC), union(FT, FC, F).
 
-free(∀(Y, T), F) :- 
+free(∀(Y, T), F) :-
     free(T, FT),
     subtract(FT, [Y], F).
 
