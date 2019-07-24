@@ -10,13 +10,16 @@ right_curly('}') --> "}".
 thin_arrow('->') --> "->".
 fat_arrow('=>') --> "=>".
 comma(',') --> ",".
+double_colon('::') --> "::".
 semicolon(';') --> ";".
+equals('=') --> "=".
 
 punctuation(P) -->
     left_paren(P) | right_paren(P)
     | left_curly(P) | right_curly(P)
     | thin_arrow(P) | fat_arrow(P)
-    | comma(P) | semicolon(P).
+    | comma(P) | semicolon(P)
+    | double_colon(P) | equals(P).
 
 upper(C) --> [C], { code_type(C, upper) }.
 lower(C) --> [C], { code_type(C, lower) }.
@@ -24,7 +27,7 @@ ident_char(C) -->
     [C],
     { code_type(C, alnum); [C] = `'` ; [C] = `_` }.
 
-% TODO: quantified identifiers
+% TODO: qualified identifiers
 % TODO: rename to make clear this is a _constructor_ ident
 ident(ident(Ident)) -->
     upper(C),
