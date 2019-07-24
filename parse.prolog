@@ -13,9 +13,6 @@ token(T) --> [T].
 tyvar(tyvar(V)) -->
     [varident(V)].
 
-constraint(Name @ Arg) -->
-    [ident(Name)], type(Arg).
-
 basic_type(Prim) -->
     [ident(Prim)].
 basic_type(tyvar(Var)) -->
@@ -42,14 +39,18 @@ type(('->' $ Lhs) $ Rhs) -->
     ['->'],
     type(Rhs).
 
-class(class(Constraints, Name, Var)) -->
-    % For now, we don't allow actual method declarations, since we haven't (yet)
-    % implemented a lexer/parser for the full type language.
-    % (We could possibly 'cop out' by parsing everything after the `::` up to the `;` as a single atom.)
-    % We also only allow the definition of single-parameter classes.
+constraint(Name @ Arg) -->
+    [ident(Name)], type(Arg).
+
+class(class(Constraints, Name, Var, Methods)) -->
+    % TODO: support multi-parameter typeclasses
     [class],
     optional(context(Constraints), { Constraints = [] }),
-    [ident(Name), varident(Var), where, '{', '}'].
+    [ident(Name), varident(Var), where],
+    sequence(token('{'), method_decl, token(';'), token('}'), Methods).
+
+method_decl(method(Name, Type)) -->
+    [varident(Name), '::'], type(Type).
 
 context([Constraint]) -->
     constraint(Constraint),
