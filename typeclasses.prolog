@@ -39,11 +39,15 @@ instance_decl(Goals, Head, _Dict) :-
 %! tyvars(Term, Vars).
 %
 % True if `Vars` is the set of type variables ocurring in `Term`.
+tyvars(Atom, []) :-
+    atom(Atom).
 tyvars(tyvar(V), [V]).
 tyvars(_ @ Arg, Vars) :-
     tyvars(Arg, Vars).
-tyvars(_ $ Args, Vars) :-
-    tyvars(Args, Vars).
+tyvars(Ctor $ Arg, Vars) :-
+    tyvars(Ctor, CVars),
+    tyvars(Arg, AVars),
+    union(CVars, AVars, Vars).
 tyvars(List, Vars) :-
     maplist(tyvars, List, Subvars),
     foldl(union, Subvars, [], Vars).
@@ -56,27 +60,31 @@ no_unbound_tyvars(Goals, Head) :-
     tyvars(Head, HVars),
     subset(GVars, HVars).
 
-%! substitute_vars(Term, Mapping, Substituted).
+%! substitute_terms(Term, Mapping, Substituted)
 %
-% Given a mapping from type variables to values, substitute each occurrence
-% of a variable with its mapped value.
-substitute_vars(tyvar(V), Mapping, Value) :-
-    member(V-Value, Mapping).
-substitute_vars(Ctor $ Args, Mapping, Ctor $ MArgs) :-
-    substitute_vars(Args, Mapping, MArgs).
-substitute_vars(Ctor @ Args, Mapping, Ctor @ MArgs) :-
-    substitute_vars(Args, Mapping, MArgs).
-% We could have written the list clause with maplist, but that seemed to
-% prevent identically-named variables from unifying.
-substitute_vars([], _, []).
-substitute_vars([X | XS], Mapping, [M | MS]) :-
-    substitute_vars(X, Mapping, M),
-    substitute_vars(XS, Mapping, MS).
+% Given a list of mappings `Subterm - Substitution`, replace each occurrence of
+% a subterm with its corresponding substituted term.
+substitute_terms(Term, Mapping, Substituted) :-
+    ( member(Term - S, Mapping) ->
+        Substituted = S
+    ; compound(Term) ->
+        Term =.. [Functor | Args],
+        substitute_terms_list(Args, Mapping, SArgs),
+        Substituted =.. [Functor | SArgs]
+    ;
+        Substituted = Term
+    ).
+
+% Helper function for `substitute_terms`.
+substitute_terms_list([], _, []).
+substitute_terms_list([T | Ts], Mapping, [U | Us]) :-
+    substitute_terms(T, Mapping, U),
+    substitute_terms_list(Ts, Mapping, Us).
 
 %! make_nonground(Term, NonGround).
 %
-% Replace each type variable in a term with a fresh Prolog variable.
+% Replace each type variable in a (Haskell) term, or list of terms, with a fresh Prolog variable.
 make_nonground(Term, NonGround) :-
     tyvars(Term, Vars),
-    maplist([TyVar, Mapping] >> (Mapping = TyVar - _), Vars, Mappings),
-    substitute_vars(Term, Mappings, NonGround).
+    maplist([TyVar, Mapping] >> (Mapping = tyvar(TyVar) - _), Vars, Mappings),
+    substitute_terms(Term, Mappings, NonGround).

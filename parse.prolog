@@ -42,7 +42,7 @@ type(('->' $ Lhs) $ Rhs) -->
 constraint(Name @ Arg) -->
     [ident(Name)], type(Arg).
 
-class(class(Constraints, Name, Var, Methods)) -->
+class(class(Constraints, Name @ Var, Methods)) -->
     % TODO: support multi-parameter typeclasses
     [class],
     optional(context(Constraints), { Constraints = [] }),
@@ -59,7 +59,7 @@ context(Constraints) -->
     sequence(token('('), constraint, token(','), token(')'), Constraints),
     ['=>'].
 
-instance(instance(Constraints, Class, Type, Impls)) -->
+instance(instance(Constraints, Class @ Type, Impls)) -->
     [instance],
     optional(context(Constraints), { Constraints = [] }),
     [ident(Class)],
