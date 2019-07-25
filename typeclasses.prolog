@@ -74,3 +74,23 @@ make_nonground(Term, NonGround) :-
     tyvars(Term, Vars),
     maplist([TyVar, Mapping] >> (Mapping = tyvar(TyVar) - _), Vars, Mappings),
     substitute_terms(Term, Mappings, NonGround).
+
+type_to_functor(Term, Term) :-
+    Term \= _ $ _.
+type_to_functor(Ctor $ Arg, Functor) :-
+    type_to_functor(Ctor, FCtor),
+    FCtor =.. [Atom | LeftArgs],
+    type_to_functor(Arg, FArg),
+    append(LeftArgs, [FArg], FArgs),
+    Functor =.. [Atom | FArgs].
+
+constraint_to_goal(Class @ Type, Goal) :-
+    type_to_functor(Type, Arg),
+    Goal =.. [Class, Arg].
+
+instance_to_clause(instance(Constraints, Head, _), Clause) :-
+    make_nonground([Head | Constraints], [NGHead | NGConstraints]),
+    constraint_to_goal(NGHead, ClauseHead),
+    maplist(constraint_to_goal, NGConstraints, Goals),
+    foldl([G1, G2, B] >> (B = (G2, G1)), Goals, true, Body),
+    Clause = (ClauseHead :- Body).
