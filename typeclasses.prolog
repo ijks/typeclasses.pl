@@ -103,3 +103,17 @@ instance_to_clause(instance(Constraints, Head, _), Clause) :-
     maplist(constraint_to_goal, NGConstraints, Goals),
     foldl([G1, G2, B] >> (B = (G2, G1)), Goals, true, Body),
     Clause = (ClauseHead :- Body).
+
+make_instance_nonground(instance(Constraints, Head, Methods), instance(NGConstraints, NGHead, Methods)) :-
+    make_nonground([Head | Constraints], [NGHead | NGConstraints]).
+
+has_instance(Instances, Candidate, Instance) :-
+    maplist(make_instance_nonground, Instances, NGInstances),
+    make_nonground(Candidate, NGCandidate),
+    has_instance_ng(NGInstances, NGCandidate, Instance).
+
+has_instance_ng(Instances, Candidate, Instance) :-
+    Instance = instance(Constraints, Head, _),
+    member(Instance, Instances),
+    Head = Candidate,
+    maplist([C] >> (has_instance_ng(Instances, C, _)), Constraints).

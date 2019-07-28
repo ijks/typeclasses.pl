@@ -16,6 +16,7 @@ constraint(Name @ Type) :-
     atom(Name),
     type(Type).
 
+% TODO: when the class has superclasses, backreferences to the prerequisite instances
 instance(instance(Constraints, Head, _Methods)) :-
     maplist(constraint, Constraints),
     constraint(Head).
