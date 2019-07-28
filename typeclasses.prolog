@@ -83,6 +83,16 @@ type_to_term(Ctor $ Arg, Functor) :-
     append(LeftArgs, [TArg], TArgs),
     Functor =.. [Atom | TArgs].
 
+term_to_type(Var, tyvar(VarName)) :-
+    var(Var),
+    term_to_atom(Var, VarName).
+term_to_type(Atom, ty(Atom)) :-
+    atom(Atom).
+term_to_type(Functor, Ap) :-
+    Functor =.. Components,
+    maplist(term_to_type, Components, Types),
+    syntax:list_to_application(Types, Ap).
+
 constraint_to_goal(Class @ Type, Goal) :-
     type_to_term(Type, Arg),
     Goal =.. [Class, Arg].
