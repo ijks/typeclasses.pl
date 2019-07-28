@@ -1,3 +1,4 @@
+:- use_module(syntax).
 
 % class Functor a where ...
 
@@ -18,9 +19,6 @@
 % Is that within the scope of the system?
 
 % What about coherence?
-
-:- op(100, xfx, $).
-:- op(100, xfx, @).
 
 %! tyvars(Term, Vars).
 %

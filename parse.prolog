@@ -2,10 +2,8 @@
 
 :- use_module(library(dcg/high_order)).
 
+:- use_module(syntax).
 :- use_module(lex).
-
-:- op(100, yfx, $).
-:- op(100, xfx, @).
 
 % TODO: maybe use this everywhere instead of `[some_atom]`?
 token(T) --> [T].
@@ -24,7 +22,7 @@ basic_type(T) -->
 
 applied_type(Ap) -->
     basic_type(T), sequence(basic_type, Ts),
-    { list_to_application([T | Ts], Ap) }.
+    { syntax:list_to_application([T | Ts], Ap) }.
 
 % Helper to convert a list of types to a left-associative application of those types.
 % E.g. `[a, b, c]` becomes `(a $ b) $ c`.
