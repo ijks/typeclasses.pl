@@ -23,8 +23,7 @@
 %! tyvars(Term, Vars).
 %
 % True if `Vars` is the set of type variables ocurring in `Term`.
-tyvars(Atom, []) :-
-    atom(Atom).
+tyvars(ty(_), []).
 tyvars(tyvar(V), [V]).
 tyvars(_ @ Arg, Vars) :-
     tyvars(Arg, Vars).
@@ -73,17 +72,17 @@ make_nonground(Term, NonGround) :-
     maplist([TyVar, Mapping] >> (Mapping = tyvar(TyVar) - _), Vars, Mappings),
     substitute_terms(Term, Mappings, NonGround).
 
-type_to_functor(Term, Term) :-
-    Term \= _ $ _.
-type_to_functor(Ctor $ Arg, Functor) :-
-    type_to_functor(Ctor, FCtor),
-    FCtor =.. [Atom | LeftArgs],
-    type_to_functor(Arg, FArg),
-    append(LeftArgs, [FArg], FArgs),
-    Functor =.. [Atom | FArgs].
+type_to_term(ty(T), T) :-
+    atom(T).
+type_to_term(Ctor $ Arg, Functor) :-
+    type_to_term(Ctor, TCtor),
+    TCtor =.. [Atom | LeftArgs],
+    type_to_term(Arg, TArg),
+    append(LeftArgs, [TArg], TArgs),
+    Functor =.. [Atom | TArgs].
 
 constraint_to_goal(Class @ Type, Goal) :-
-    type_to_functor(Type, Arg),
+    type_to_term(Type, Arg),
     Goal =.. [Class, Arg].
 
 instance_to_clause(instance(Constraints, Head, _), Clause) :-

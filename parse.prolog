@@ -11,7 +11,7 @@ token(T) --> [T].
 tyvar(tyvar(V)) -->
     [varident(V)].
 
-basic_type(Prim) -->
+basic_type(ty(Prim)) -->
     [ident(Prim)].
 basic_type(tyvar(Var)) -->
     [varident(Var)].

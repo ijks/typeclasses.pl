@@ -4,7 +4,7 @@
     , op(100, xfx, @)
     ]).
 
-type(A) :-
+type(ty(A)) :-
     atom(A).
 type(tyvar(A)) :-
     atom(A).
