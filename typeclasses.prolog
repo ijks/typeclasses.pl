@@ -72,6 +72,8 @@ make_nonground(Term, NonGround) :-
     maplist([TyVar, Mapping] >> (Mapping = tyvar(TyVar) - _), Vars, Mappings),
     substitute_terms(Term, Mappings, NonGround).
 
+type_to_term(V, V) :-
+    var(V).
 type_to_term(ty(T), T) :-
     atom(T).
 type_to_term(Ctor $ Arg, Functor) :-
