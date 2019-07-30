@@ -61,11 +61,21 @@ make_nonground(Term, NonGround) :-
     maplist([V, M] >> (M = V - _), Vars, Mappings),
     assign(Term, Mappings, NonGround).
 
+%! has_instance(Instances, Candidate, Instance)
+%
+% True if, given a list of instance clauses `Instances`, the constraint `Candidate`
+% holds, with `Instance` as a witness.
+%
+% TODO: better way of indicating the witness instance - something like a dictionary, likely.
 has_instance(Instances, Candidate, Instance) :-
     maplist(make_nonground, Instances, NGInstances),
     make_nonground(Candidate, NGCandidate),
     has_instance_ng(NGInstances, NGCandidate, Instance).
 
+%! has_instance_ng(Instances, Candidate, Instance)
+%
+% Helper predicate for `has_instance_ng`, where type variables are assumed to
+% be replaced with Prolog variables.
 has_instance_ng(Instances, Candidate, Instance) :-
     Instance = instance(Constraints, Head, _),
     member(Instance, Instances),
