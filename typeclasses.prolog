@@ -43,6 +43,28 @@ tyvars(List, Vars) :-
     maplist(tyvars, List, Subvars),
     foldl(union, Subvars, [], Vars).
 
+%! assign(Term, Mappings, Assigned)
+%
+% True if `Assigned` is a Haskell term such that, for each assignment `a - X`
+% in `Mappings`, % every occurrence of `tyvar(a)` in `Term` is replaced with `X`.
+assign(tyvar(V), Mappings, R) :-
+    ( member(V - X, Mappings) ->
+        R = X
+    ;
+        R = tyvar(V)
+    ).
+assign(ty(X), _, ty(X)).
+assign(Ctor $ Type, Mappings, ACtor $ AType) :-
+    assign(Ctor, Mappings, ACtor),
+    assign(Type, Mappings, AType).
+assign(Class @ Type, Mappings, Class @ AType) :-
+    assign(Type, Mappings, AType).
+assign(instance(Ctx, Head, Methods), Mappings, instance(ACtx, AHead, Methods)) :-
+    assign(Ctx, Mappings, ACtx),
+    assign(Head, Mappings, AHead).
+assign(List, Mappings, AList) :-
+    maplist({Mappings}/[X, Y] >> assign(X, Mappings, Y), List, AList).
+
 %! no_unbound_tyvars(Goals, Head).
 %
 % True if all variables in `Goals` are bound in `Head`, i.e. all occur in `Head`.
@@ -77,8 +99,8 @@ substitute_terms_list([T | Ts], Mapping, [U | Us]) :-
 % Replace each type variable in a (Haskell) term, or list of terms, with a fresh Prolog variable.
 make_nonground(Term, NonGround) :-
     tyvars(Term, Vars),
-    maplist([TyVar, Mapping] >> (Mapping = tyvar(TyVar) - _), Vars, Mappings),
-    substitute_terms(Term, Mappings, NonGround).
+    maplist([V, M] >> (M = V - _), Vars, Mappings),
+    assign(Term, Mappings, NonGround).
 
 type_to_term(V, V) :-
     var(V).
