@@ -16,6 +16,7 @@ Comes with a parser for (a fragment of) Haskell type class and instance declarat
       be 'smaller' than the instance head.
   - [ ] anything else that could prevent termination?
 - [ ] Qualified type identifiers
+- [ ] Explicit instance dictionaries?
 
 ## Future Work
 
