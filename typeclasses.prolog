@@ -31,6 +31,14 @@ tyvars(Ctor $ Arg, Vars) :-
     tyvars(Ctor, CVars),
     tyvars(Arg, AVars),
     union(CVars, AVars, Vars).
+tyvars(instance(Constraints, Head, _), Vars) :-
+    tyvars(Constraints, CVars),
+    tyvars(Head, HVars),
+    union(CVars, HVars, Vars).
+tyvars(class(Constraints, Head, _), Vars) :-
+    tyvars(Constraints, CVars),
+    tyvars(Head, HVars),
+    union(CVars, HVars, Vars).
 tyvars(List, Vars) :-
     maplist(tyvars, List, Subvars),
     foldl(union, Subvars, [], Vars).
