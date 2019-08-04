@@ -24,12 +24,6 @@ applied_type(Ap) -->
     basic_type(T), sequence(basic_type, Ts),
     { syntax:list_to_application([T | Ts], Ap) }.
 
-% Helper to convert a list of types to a left-associative application of those types.
-% E.g. `[a, b, c]` becomes `(a $ b) $ c`.
-list_to_application([T], T).
-list_to_application([T | Ts], Ap) :-
-    foldl([TX, TY, R] >> (R = TY $ TX), Ts, T, Ap).
-
 type(T) -->
     applied_type(T).
 type(('->' $ Lhs) $ Rhs) -->

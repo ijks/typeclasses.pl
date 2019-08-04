@@ -1,28 +1,5 @@
 :- use_module(syntax).
 
-%! tyvars(Term, Vars).
-%
-% True if `Vars` is the set of type variables ocurring in `Term`.
-tyvars(ty(_), []).
-tyvars(tyvar(V), [V]).
-tyvars(_ @ Arg, Vars) :-
-    tyvars(Arg, Vars).
-tyvars(Ctor $ Arg, Vars) :-
-    tyvars(Ctor, CVars),
-    tyvars(Arg, AVars),
-    union(CVars, AVars, Vars).
-tyvars(instance(Constraints, Head, _), Vars) :-
-    tyvars(Constraints, CVars),
-    tyvars(Head, HVars),
-    union(CVars, HVars, Vars).
-tyvars(class(Constraints, Head, _), Vars) :-
-    tyvars(Constraints, CVars),
-    tyvars(Head, HVars),
-    union(CVars, HVars, Vars).
-tyvars(List, Vars) :-
-    maplist(tyvars, List, Subvars),
-    foldl(union, Subvars, [], Vars).
-
 %! assign(Term, Mappings, Assigned)
 %
 % True if `Assigned` is a Haskell term such that, for each assignment `a - X`
