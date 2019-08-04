@@ -75,3 +75,8 @@ declaration(D) -->
 file(Classes, Instances) -->
     sequence(declaration, Decls),
     { partition([class(_, _, _)] >> true, Decls, Classes, Instances) }.
+
+parse(Str, Rule) :-
+    string_codes(Str, Codes),
+    phrase(lex:tokens(Tokens), Codes),
+    phrase(Rule, Tokens).
