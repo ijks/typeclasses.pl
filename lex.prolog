@@ -50,4 +50,4 @@ token(T) -->
     punctuation(T) | keyword_or_varident(T) | ident(T).
 
 tokens(Toks) -->
-    sequence(token, whites, Toks).
+    sequence(token, blanks, Toks).
