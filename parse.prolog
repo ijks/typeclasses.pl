@@ -34,10 +34,12 @@ type(('->' $ Lhs) $ Rhs) -->
 constraint(Name @ Arg) -->
     [ident(Name)], type(Arg).
 
-class(class(Constraints, Name @ Var, Methods)) -->
+class(class(Constraints, Name @ tyvar(Var), Methods)) -->
     % TODO: support multi-parameter typeclasses
+    % TODO: default method impls
     [class],
     optional(context(Constraints), { Constraints = [] }),
+    % FIXME: the `where` isn't obligatory for zero-method classes
     [ident(Name), varident(Var), where],
     sequence(token('{'), method_decl, token(';'), token('}'), Methods).
 
@@ -56,6 +58,7 @@ instance(instance(Constraints, Class @ Type, Impls)) -->
     optional(context(Constraints), { Constraints = [] }),
     [ident(Class)],
     basic_type(Type),
+    % FIXME: the `where` isn't obligatory for zero-method instances
     [where],
     sequence(token('{'), method_body, token(';'), token('}'), Impls).
 
