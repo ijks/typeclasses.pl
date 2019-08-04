@@ -68,3 +68,10 @@ method_body(body(Name, Body)) -->
     % One future improvement would be to just grab everything up to the `;` as a plain string.
     { Body = undefined },
     [varident(Name), '=', varident(Body)].
+
+declaration(D) -->
+    class(D) | instance(D).
+
+file(Classes, Instances) -->
+    sequence(declaration, Decls),
+    { partition([class(_, _, _)] >> true, Decls, Classes, Instances) }.
