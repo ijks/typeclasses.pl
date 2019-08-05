@@ -2,6 +2,7 @@
     [ has_instance/2
     ]).
 
+:- use_module(parse).
 :- use_module(syntax).
 
 %! assign(Term, Mappings, Assigned)
@@ -54,3 +55,7 @@ has_instance_ng(Instances, Candidate) :-
     member(Instance, Instances),
     Head = Candidate,
     maplist([C] >> (has_instance_ng(Instances, C)), Constraints).
+
+query_file(File, Query) :-
+    parse_file(File, file(_, Instances)),
+    has_instance(Instances, Query).

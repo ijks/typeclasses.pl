@@ -1,7 +1,12 @@
-:- module(lex, [token//1, tokens//1]).
+:- module(lex,
+    [ token//1
+    , tokens//1
+    , lex_file/2
+    ]).
 
 :- use_module(library(dcg/basics)).
 :- use_module(library(dcg/high_order)).
+:- use_module(library(pio)).
 
 left_paren('(') --> "(".
 right_paren(')') --> ")".
@@ -51,3 +56,6 @@ token(T) -->
 
 tokens(Toks) -->
     sequence(token, blanks, Toks).
+
+lex_file(File, Tokens) :-
+    phrase_from_file(tokens(Tokens), File).

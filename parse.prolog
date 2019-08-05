@@ -7,9 +7,12 @@
     , instance//1
     , declaration//1
     , file//2
+
+    , parse_file/2
     ]).
 
 :- use_module(library(dcg/high_order)).
+:- use_module(library(pio)).
 
 :- use_module(syntax).
 :- use_module(lex).
@@ -88,4 +91,8 @@ file(Classes, Instances) -->
 parse(Str, Rule) :-
     string_codes(Str, Codes),
     phrase(lex:tokens(Tokens), Codes),
+    phrase(Rule, Tokens).
+
+parse_file(File, Rule) :-
+    lex_file(File, Tokens),
     phrase(Rule, Tokens).
