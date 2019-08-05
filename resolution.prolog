@@ -1,4 +1,4 @@
-:- module(typeclasses,
+:- module(resolution,
     [ has_instance/2
     ]).
 
