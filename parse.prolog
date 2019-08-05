@@ -1,4 +1,13 @@
-:- module(parse, []).
+:- module(parse,
+    [ parse/2
+
+    , type//1
+    , constraint//1
+    , class//1
+    , instance//1
+    , declaration//1
+    , file//2
+    ]).
 
 :- use_module(library(dcg/high_order)).
 
