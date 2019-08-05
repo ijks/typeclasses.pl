@@ -1,3 +1,7 @@
+:- module(typeclasses,
+    [ has_instance/2
+    ]).
+
 :- use_module(syntax).
 
 %! assign(Term, Mappings, Assigned)
