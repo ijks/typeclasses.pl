@@ -26,14 +26,6 @@ assign(instance(Ctx, Head, Methods), Mappings, instance(ACtx, AHead, Methods)) :
 assign(List, Mappings, AList) :-
     maplist({Mappings}/[X, Y] >> assign(X, Mappings, Y), List, AList).
 
-%! no_unbound_tyvars(Goals, Head).
-%
-% True if all variables in `Goals` are bound in `Head`, i.e. all occur in `Head`.
-no_unbound_tyvars(Goals, Head) :-
-    tyvars(Goals, GVars),
-    tyvars(Head, HVars),
-    subset(GVars, HVars).
-
 %! make_nonground(Term, NonGround).
 %
 % Replace each type variable in a (Haskell) term, or list of terms, with a fresh Prolog variable.
