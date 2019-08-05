@@ -6,7 +6,7 @@
     , class//1
     , instance//1
     , declaration//1
-    , file//2
+    , mod//2
 
     , parse_file/2
     ]).
@@ -84,7 +84,7 @@ method_body(body(Name, Body)) -->
 declaration(D) -->
     class(D) | instance(D).
 
-file(Classes, Instances) -->
+mod(Classes, Instances) -->
     sequence(declaration, Decls),
     { partition([class(_, _, _)] >> true, Decls, Classes, Instances) }.
 

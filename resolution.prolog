@@ -57,5 +57,5 @@ has_instance_ng(Instances, Candidate) :-
     maplist([C] >> (has_instance_ng(Instances, C)), Constraints).
 
 query_file(File, Query) :-
-    parse_file(File, file(_, Instances)),
+    parse_file(File, mod(_, Instances)),
     has_instance(Instances, Query).
