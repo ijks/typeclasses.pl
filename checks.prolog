@@ -1,7 +1,7 @@
 :- module(checks, []).
 
 :- use_module(syntax).
-:- use_module(typeclasses).
+:- use_module(resolution).
 
 %! unflexible_type(Ty).
 %
