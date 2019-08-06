@@ -1,5 +1,14 @@
-:- module(checks, []).
+:- module(checks,
+    [ unflexible_type/1
+    , unflexible_instance/1
+    , no_unbound_variables/1
+    , mentioned_classes_exist/2
+    , class_is_declared_once/2
+    , is_unflexible_constraint/1
+    , is_well_formed_class_decl/1
+    , superclass_instances_exist/3
 
+:- use_module(parse).
 :- use_module(syntax).
 :- use_module(resolution).
 
