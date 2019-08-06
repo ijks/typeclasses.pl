@@ -1,6 +1,6 @@
 # typeclasses.pl
 
-A proof-of-concept Prolog implementation of Haskell's type class system, specifically instance search.
+A proof-of-concept Prolog implementation of Haskell's type class system, specifically instance resolution.
 Comes with a parser for (a fragment of) Haskell type class and instance declarations.
 
 ## To Do
