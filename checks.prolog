@@ -8,6 +8,9 @@
     , is_well_formed_class_decl/1
     , superclass_instances_exist/3
 
+    , check_file/2
+    ]).
+
 :- use_module(parse).
 :- use_module(syntax).
 :- use_module(resolution).
@@ -68,3 +71,7 @@ is_well_formed_class_decl(class(Ctx, _ @ tyvar(_), _)) :-
 superclass_instances_exist(Classes, Instances, instance(_, Class @ Type, _)) :-
     member(class(Superclasses, Class @ _, _), Classes),
     maplist([class(_, SClass @ _, _)] >> has_instance(Instances, SClass @ Type), Superclasses).
+
+check_file(File, Check) :-
+    parse_file(File, mod(Cs, Is)),
+    call(Check, Cs, Is).
