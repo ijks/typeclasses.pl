@@ -6,11 +6,11 @@ Comes with a parser for (a fragment of) Haskell type class and instance declarat
 ## To Do
 
 - [ ] Input checks:
-  - [ ] definition of classes
-  - [ ] presence of superclass instances
+  - [x] definition of classes
+  - [x] presence of superclass instances
   - [ ] coherence
-  - [ ] the type in the head is `T a1 ... an` (no FlexibleInstances)
-  - [ ] Only type-variable arguments in contexts (no FlexibleContexts)
+  - [x] the type in the head is `T a1 ... an` (no FlexibleInstances)
+  - [x] Only type-variable arguments in contexts (no FlexibleContexts)
   - [ ] no unbound variables (no UndecidableInstances)
     - if FlexibleContexts but no UndecidableInstances, then constraints must
       be 'smaller' than the instance head.
