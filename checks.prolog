@@ -4,8 +4,8 @@
     , no_unbound_variables/1
     , mentioned_classes_exist/2
     , class_is_declared_once/2
-    , is_unflexible_constraint/1
-    , is_well_formed_class_decl/1
+    , unflexible_constraint/1
+    , well_formed_class_decl/1
     , superclass_instances_exist/3
 
     , check_file/2
@@ -55,14 +55,14 @@ class_is_declared_once(Classes, ClassDecl) :-
     nth0(_, Classes, ClassDecl, Rest),
     \+ member(class(_, Class @ _, _), Rest).
 
-%! is_unflexible_constraint(Constraint).
+%! unflexible_constraint(Constraint).
 %
 % True if `Constraint` is of the form `_ @ tyvar(_)`.
-is_unflexible_constraint(_ @ tyvar(_)).
+unflexible_constraint(_ @ tyvar(_)).
 
-%! is_well_formed_class_decl(ClassDecl).
-is_well_formed_class_decl(class(Ctx, _ @ tyvar(_), _)) :-
-    maplist(is_unflexible_constraint, Ctx).
+%! well_formed_class_decl(ClassDecl).
+well_formed_class_decl(class(Ctx, _ @ tyvar(_), _)) :-
+    maplist(unflexible_constraint, Ctx).
 
 %! superclass_instances_exist(Clases, Instances, Instance).
 %
