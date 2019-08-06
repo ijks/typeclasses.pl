@@ -51,9 +51,12 @@ class(class(Constraints, Name @ tyvar(Var), Methods)) -->
     % TODO: default method impls
     [class],
     optional(context(Constraints), { Constraints = [] }),
-    % FIXME: the `where` isn't obligatory for zero-method classes
-    [ident(Name), varident(Var), where],
-    sequence(token('{'), method_decl, token(';'), token('}'), Methods).
+    [ident(Name), varident(Var)],
+    method_decls(Methods).
+
+method_decls([]) --> [].
+method_decls(Methods) -->
+    [where], sequence(token('{'), method_decl, token(';'), token('}'), Methods).
 
 method_decl(method(Name, Type)) -->
     [varident(Name), '::'], type(Type).
@@ -70,13 +73,16 @@ instance(instance(Constraints, Class @ Type, Impls)) -->
     optional(context(Constraints), { Constraints = [] }),
     [ident(Class)],
     basic_type(Type),
-    % FIXME: the `where` isn't obligatory for zero-method instances
-    [where],
-    sequence(token('{'), method_body, token(';'), token('}'), Impls).
+    method_impls(Impls).
 
-method_body(body(Name, Body)) -->
+method_impls([]) --> [].
+method_impls(Impls) -->
+    [where],
+    sequence(token('{'), method_impl, token(';'), token('}'), Impls).
+
+method_impl(body(Name, Body)) -->
     % We only allow `undefined` as a method body, because it's outside of our
-    % scope to also parse Haskell's expression language.
+    % scope to also parse Haskell's pattern & expression languages.
     % One future improvement would be to just grab everything up to the `;` as a plain string.
     { Body = undefined },
     [varident(Name), '=', varident(Body)].
